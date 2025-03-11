@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  hedge-fund:
+    build: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    # Override the entrypoint from Dockerfile
+    command: ["python", "src/main.py", "--tickers", "AAPL,MSFT,NVDA", "--show-reasoning"]
+
+  backtester:
+    build: .
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    # Override the entrypoint for backtester
+    entrypoint: ["python", "src/backtester.py"]
+    # Non-interactive mode with all arguments specified
+    command: ["--tickers", "AAPL,MSFT,NVDA", "--start-date", "2023-01-01", "--end-date", "2023-12-31", "--initial-capital", "100000"]

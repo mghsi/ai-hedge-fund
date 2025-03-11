@@ -19,6 +19,7 @@ from utils.display import print_trading_output
 from utils.analysts import ANALYST_ORDER, get_analyst_nodes
 from utils.progress import progress
 from llm.models import LLM_ORDER, get_model_info
+from utils.logger import setup_logging
 
 import argparse
 from datetime import datetime
@@ -46,7 +47,6 @@ def parse_hedge_fund_response(response):
     except Exception as e:
         print(f"Unexpected error while parsing response: {e}\nResponse: {repr(response)}")
         return None
-
 
 
 ##### Run the Hedge Fund #####
@@ -140,20 +140,10 @@ def create_workflow(selected_analysts=None):
     return workflow
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run the hedge fund trading system")
-    parser.add_argument(
-        "--initial-cash",
-        type=float,
-        default=100000.0,
-        help="Initial cash position. Defaults to 100000.0)"
-    )
-    parser.add_argument(
-        "--margin-requirement",
-        type=float,
-        default=0.0,
-        help="Initial margin requirement. Defaults to 0.0"
-    )
+def main():
+    parser = argparse.ArgumentParser(description="Run the AI Hedge Fund")
+    parser.add_argument("--initial-cash", type=float, default=100000.0, help="Initial cash position. Defaults to 100000.0)")
+    parser.add_argument("--margin-requirement", type=float, default=0.0, help="Initial margin requirement. Defaults to 0.0")
     parser.add_argument("--tickers", type=str, required=True, help="Comma-separated list of stock ticker symbols")
     parser.add_argument(
         "--start-date",
@@ -162,11 +152,13 @@ if __name__ == "__main__":
     )
     parser.add_argument("--end-date", type=str, help="End date (YYYY-MM-DD). Defaults to today")
     parser.add_argument("--show-reasoning", action="store_true", help="Show reasoning from each agent")
-    parser.add_argument(
-        "--show-agent-graph", action="store_true", help="Show the agent graph"
-    )
+    parser.add_argument("--show-agent-graph", action="store_true", help="Show the agent graph")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
+
+    # Set up logging with verbose flag
+    setup_logging(args.verbose)
 
     # Parse tickers from comma-separated string
     tickers = [ticker.strip() for ticker in args.tickers.split(",")]
@@ -199,12 +191,14 @@ if __name__ == "__main__":
     model_choice = questionary.select(
         "Select your LLM model:",
         choices=[questionary.Choice(display, value=value) for display, value, _ in LLM_ORDER],
-        style=questionary.Style([
-            ("selected", "fg:green bold"),
-            ("pointer", "fg:green bold"),
-            ("highlighted", "fg:green"),
-            ("answer", "fg:green bold"),
-        ])
+        style=questionary.Style(
+            [
+                ("selected", "fg:green bold"),
+                ("pointer", "fg:green bold"),
+                ("highlighted", "fg:green"),
+                ("answer", "fg:green bold"),
+            ]
+        ),
     ).ask()
 
     if not model_choice:
@@ -264,14 +258,16 @@ if __name__ == "__main__":
                 "short": 0,  # Number of shares held short
                 "long_cost_basis": 0.0,  # Average cost basis for long positions
                 "short_cost_basis": 0.0,  # Average price at which shares were sold short
-            } for ticker in tickers
+            }
+            for ticker in tickers
         },
         "realized_gains": {
             ticker: {
                 "long": 0.0,  # Realized gains from long positions
                 "short": 0.0,  # Realized gains from short positions
-            } for ticker in tickers
-        }
+            }
+            for ticker in tickers
+        },
     }
 
     # Run the hedge fund
@@ -286,3 +282,7 @@ if __name__ == "__main__":
         model_provider=model_provider,
     )
     print_trading_output(result)
+
+
+if __name__ == "__main__":
+    main()

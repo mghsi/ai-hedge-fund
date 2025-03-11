@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# The script generates a tree structure of a project directory with an option to exclude hidden directories.
+
+show_hidden=false
+
+# Parse options
+while getopts ":h" opt; do
+  case ${opt} in
+    h )
+      show_hidden=true
+      ;;
+    \? )
+      echo "Invalid option: $OPTARG" 1>&2
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+# Check if a directory argument is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 [-h] <root_directory_of_project>"
+    echo "   -h  Include hidden files and directories"
+    exit 1
+fi
+
+# The root directory of the project
+PROJECT_ROOT="$1"
+
+# Check if the provided directory exists
+if [ ! -d "$PROJECT_ROOT" ]; then
+    echo "Error: Directory does not exist."
+    exit 1
+fi
+
+# Generate and display the tree structure
+if [ "$show_hidden" = true ]; then
+    tree "$PROJECT_ROOT" -I '*.pyc|__pycache__' -P '*.py|*.toml|*.md' --dirsfirst
+else
+    tree "$PROJECT_ROOT" -I '*.pyc|__pycache__|.*' -P '*.py|*.toml|*.md' --dirsfirst
+fi
