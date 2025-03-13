@@ -1,0 +1,131 @@
+@startuml classes_AI_Hedge_Fund
+set namespaceSeparator none
+class "AgentProgress" as src.utils.progress.AgentProgress #AAAA00 {
+  agent_status : Dict[str, Dict[str, str]]
+  live : Live
+  started : bool
+  table : Table
+  start()
+  stop()
+  update_status(agent_name: str, ticker: Optional[str], status: str)
+}
+class "Backtester" as src.backtester.Backtester #77AADD {
+  agent : Callable
+  end_date : str
+  initial_capital : float
+  margin_ratio : float
+  model_name : str
+  model_provider : str
+  portfolio : dict
+  portfolio_values : list
+  selected_analysts : list[str]
+  start_date : str
+  tickers : list[str]
+  analyze_performance()
+  calculate_portfolio_value(current_prices)
+  execute_trade(ticker: str, action: str, quantity: float, current_price: float)
+  parse_agent_response(agent_output)
+  prefetch_data()
+  run_backtest()
+}
+class "BaseModel" as pydantic.main.BaseModel #EEDD88 {
+  model_computed_fields : ClassVar[dict[str, ComputedFieldInfo]]
+  model_config : ClassVar[ConfigDict]
+  model_extra
+  model_fields : ClassVar[dict[str, FieldInfo]]
+  model_fields_set
+  construct(_fields_set: set[str] | None) -> Self
+  copy() -> Self
+  dict() -> Dict[str, Any]
+  from_orm(obj: Any) -> Self
+  json() -> str
+  model_construct(_fields_set: set[str] | None) -> Self
+  model_copy() -> Self
+  model_dump() -> dict[str, Any]
+  model_dump_json() -> str
+  model_json_schema(by_alias: bool, ref_template: str, schema_generator: type[GenerateJsonSchema], mode: JsonSchemaMode) -> dict[str, Any]
+  model_parametrized_name(params: tuple[type[Any], ...]) -> str
+  {abstract}model_post_init(__context: Any) -> None
+  model_rebuild() -> bool | None
+  model_validate(obj: Any) -> Self
+  model_validate_json(json_data: str | bytes | bytearray) -> Self
+  model_validate_strings(obj: Any) -> Self
+  parse_file(path: str | Path) -> Self
+  parse_obj(obj: Any) -> Self
+  parse_raw(b: str | bytes) -> Self
+  schema(by_alias: bool, ref_template: str) -> Dict[str, Any]
+  schema_json() -> str
+  update_forward_refs() -> None
+  validate(value: Any) -> Self
+}
+class "BenGrahamSignal" as src.agents.ben_graham.BenGrahamSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+class "BillAckmanSignal" as src.agents.bill_ackman.BillAckmanSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+class "CathieWoodSignal" as src.agents.cathie_wood.CathieWoodSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+class "CharlieMungerSignal" as src.agents.charlie_munger.CharlieMungerSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+class "LLMCall" as src.db.models.LLMCall #44BB99 {
+  agent_name
+  duration_ms
+  error_message
+  id
+  model_name
+  model_provider
+  prompt
+  response
+  success
+  timestamp
+}
+class "LLMCallRepository" as src.db.repository.LLMCallRepository #44BB99 {
+  get_all() -> List[LLMCall]
+  get_by_agent(agent_name: str) -> List[LLMCall]
+  get_failed() -> List[LLMCall]
+  get_recent(days: int) -> List[LLMCall]
+  save(model_name: str, model_provider: str, prompt: str, response: Optional[str], agent_name: Optional[str], duration_ms: Optional[float], success: bool, error_message: Optional[str]) -> LLMCall
+}
+class "LLMLogger" as src.db.logger.LLMLogger #44BB99 {
+  log_call(prompt: Any, model_name: str, model_provider: str, response: Any, agent_name: Optional[str], duration_ms: Optional[float], success: bool, error_message: Optional[str]) -> None
+  timed_call(call_function, prompt: Any, model_name: str, model_provider: str, pydantic_model: Type[T], agent_name: Optional[str]) -> T
+}
+class "PortfolioDecision" as src.agents.portfolio_manager.PortfolioDecision #99DDFF {
+  action : Literal['buy', 'sell', 'short', 'cover', 'hold']
+  confidence : Optional[float]
+  quantity : Optional[int]
+  reasoning : Optional[str]
+}
+class "PortfolioManagerOutput" as src.agents.portfolio_manager.PortfolioManagerOutput #99DDFF {
+  decisions : Optional[dict[str, PortfolioDecision]]
+}
+class "StanleyDruckenmillerSignal" as src.agents.stanley_druckenmiller.StanleyDruckenmillerSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+class "WarrenBuffettSignal" as src.agents.warren_buffett.WarrenBuffettSignal #99DDFF {
+  confidence : float
+  reasoning : str
+  signal : Literal['bullish', 'bearish', 'neutral']
+}
+src.agents.ben_graham.BenGrahamSignal --|> pydantic.main.BaseModel
+src.agents.bill_ackman.BillAckmanSignal --|> pydantic.main.BaseModel
+src.agents.cathie_wood.CathieWoodSignal --|> pydantic.main.BaseModel
+src.agents.charlie_munger.CharlieMungerSignal --|> pydantic.main.BaseModel
+src.agents.portfolio_manager.PortfolioDecision --|> pydantic.main.BaseModel
+src.agents.portfolio_manager.PortfolioManagerOutput --|> pydantic.main.BaseModel
+src.agents.stanley_druckenmiller.StanleyDruckenmillerSignal --|> pydantic.main.BaseModel
+src.agents.warren_buffett.WarrenBuffettSignal --|> pydantic.main.BaseModel
+@enduml

@@ -25,6 +25,7 @@ questionary = "^2.1.0"
 rich = "^13.9.4"
 langchain-google-genai = "^2.0.11"
 sqlalchemy = "^2.0.38"
+pylint = "^3.3.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"

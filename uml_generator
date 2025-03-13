@@ -1,0 +1,2 @@
+#!/bin/bash
+poetry run pyreverse ./src -A -o puml -p AI_Hedge_Fund -d uml_diagrams --colorized

@@ -1,12 +1,12 @@
-from graph.state import AgentState, show_agent_reasoning
+from src.graph.state import AgentState, show_agent_reasoning
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage
 from pydantic import BaseModel
 import json
 from typing_extensions import Literal
-from tools.api import get_financial_metrics, get_market_cap, search_line_items
-from utils.llm import call_llm
-from utils.progress import progress
+from src.tools.api import get_financial_metrics, get_market_cap, search_line_items
+from src.utils.llm import call_llm
+from src.utils.progress import progress
 
 
 class WarrenBuffettSignal(BaseModel):
@@ -332,20 +332,17 @@ def generate_buffett_output(
     )
 
     # Generate the prompt
-    prompt = template.invoke({
-        "analysis_data": json.dumps(analysis_data, indent=2), 
-        "ticker": ticker
-      })
+    prompt = template.invoke({"analysis_data": json.dumps(analysis_data, indent=2), "ticker": ticker})
 
     # Create default factory for WarrenBuffettSignal
     def create_default_warren_buffett_signal():
         return WarrenBuffettSignal(signal="neutral", confidence=0.0, reasoning="Error in analysis, defaulting to neutral")
 
     return call_llm(
-        prompt=prompt, 
-        model_name=model_name, 
-        model_provider=model_provider, 
-        pydantic_model=WarrenBuffettSignal, 
-        agent_name="warren_buffett_agent", 
+        prompt=prompt,
+        model_name=model_name,
+        model_provider=model_provider,
+        pydantic_model=WarrenBuffettSignal,
+        agent_name="warren_buffett_agent",
         default_factory=create_default_warren_buffett_signal,
-        )
+    )

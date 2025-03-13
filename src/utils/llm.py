@@ -4,8 +4,8 @@ import json
 import time
 from typing import TypeVar, Type, Optional, Any
 from pydantic import BaseModel
-from utils.progress import progress
-from db.logger import LLMLogger
+from src.utils.progress import progress
+from src.db.logger import LLMLogger
 
 T = TypeVar("T", bound=BaseModel)
 

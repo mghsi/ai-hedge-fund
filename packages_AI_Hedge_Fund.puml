@@ -1,0 +1,91 @@
+@startuml packages_AI_Hedge_Fund
+set namespaceSeparator none
+package "src" as src #77AADD {
+}
+package "src.agents" as src.agents #99DDFF {
+}
+package "src.agents.ben_graham" as src.agents.ben_graham #99DDFF {
+}
+package "src.agents.bill_ackman" as src.agents.bill_ackman #99DDFF {
+}
+package "src.agents.cathie_wood" as src.agents.cathie_wood #99DDFF {
+}
+package "src.agents.charlie_munger" as src.agents.charlie_munger #99DDFF {
+}
+package "src.agents.fundamentals" as src.agents.fundamentals #99DDFF {
+}
+package "src.agents.portfolio_manager" as src.agents.portfolio_manager #99DDFF {
+}
+package "src.agents.risk_manager" as src.agents.risk_manager #99DDFF {
+}
+package "src.agents.sentiment" as src.agents.sentiment #99DDFF {
+}
+package "src.agents.stanley_druckenmiller" as src.agents.stanley_druckenmiller #99DDFF {
+}
+package "src.agents.technicals" as src.agents.technicals #99DDFF {
+}
+package "src.agents.valuation" as src.agents.valuation #99DDFF {
+}
+package "src.agents.warren_buffett" as src.agents.warren_buffett #99DDFF {
+}
+package "src.backtester" as src.backtester #77AADD {
+}
+package "src.db" as src.db #44BB99 {
+}
+package "src.db.engine" as src.db.engine #44BB99 {
+}
+package "src.db.logger" as src.db.logger #44BB99 {
+}
+package "src.db.models" as src.db.models #44BB99 {
+}
+package "src.db.repository" as src.db.repository #44BB99 {
+}
+package "src.main" as src.main #77AADD {
+}
+package "src.tools" as src.tools #BBCC33 {
+}
+package "src.tools.api" as src.tools.api #BBCC33 {
+}
+package "src.utils" as src.utils #AAAA00 {
+}
+package "src.utils.analysts" as src.utils.analysts #AAAA00 {
+}
+package "src.utils.display" as src.utils.display #AAAA00 {
+}
+package "src.utils.llm" as src.utils.llm #AAAA00 {
+}
+package "src.utils.logger" as src.utils.logger #AAAA00 {
+}
+package "src.utils.progress" as src.utils.progress #AAAA00 {
+}
+package "src.utils.visualize" as src.utils.visualize #AAAA00 {
+}
+src.backtester --> src.main
+src.backtester --> src.tools.api
+src.backtester --> src.utils.analysts
+src.backtester --> src.utils.display
+src.backtester --> src.utils.logger
+src.db --> src.db.engine
+src.db --> src.db.logger
+src.db --> src.db.models
+src.db --> src.db.repository
+src.db.engine --> src.db.models
+src.db.logger --> src.db.repository
+src.db.repository --> src.db.engine
+src.db.repository --> src.db.models
+src.main --> src.agents.ben_graham
+src.main --> src.agents.bill_ackman
+src.main --> src.agents.fundamentals
+src.main --> src.agents.portfolio_manager
+src.main --> src.agents.risk_manager
+src.main --> src.agents.sentiment
+src.main --> src.agents.technicals
+src.main --> src.agents.valuation
+src.main --> src.agents.warren_buffett
+src.main --> src.utils.analysts
+src.main --> src.utils.display
+src.main --> src.utils.logger
+src.main --> src.utils.progress
+src.main --> src.utils.visualize
+src.utils.display --> src.utils.analysts
+@enduml
