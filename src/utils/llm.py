@@ -56,7 +56,7 @@ def call_llm(prompt: Any, model_name: str, model_provider: str, pydantic_model: 
                     result = pydantic_model(**parsed_result)
 
             # Log the successful call
-            LLMLogger.log_call(prompt=prompt, model_name=model_name, model_provider=model_provider, response=result, agent_name=agent_name, duration_ms=(time.time() - start_time) * 1000, success=True)
+            LLMLogger.log_call(prompt=prompt, model_name=model_name, model_provider=model_provider, response=result, agent_name=agent_name, duration_ms=(time.time() - start_time) * 1000, success=success)
 
             return result
 

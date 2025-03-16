@@ -9,10 +9,10 @@ class LLMCallRepository:
     """Repository for LLM call logs."""
 
     @staticmethod
-    def save(model_name: str, model_provider: str, prompt: str, response: Optional[str] = None, agent_name: Optional[str] = None, duration_ms: Optional[float] = None, success: bool = True, error_message: Optional[str] = None) -> LLMCall:
+    def save(model_name: str, model_provider: str, prompt: str, response: Optional[str] = None, agent_name: Optional[str] = None, duration_ms: float = 0.0, success: bool = True, error_message: Optional[str] = None) -> LLMCall:
         """Save an LLM call log to the database."""
         with session_scope() as session:
-            llm_call = LLMCall(model_name, model_provider, agent_name, prompt, response, duration_ms, success, error_message)
+            llm_call = LLMCall(model_name=model_name, model_provider=model_provider, agent_name=agent_name, prompt=prompt, response=response, duration_ms=duration_ms, success=success, error_message=error_message)
             session.add(llm_call)
             session.flush()  # Flush to get the ID
             session.refresh(llm_call)
