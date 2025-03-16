@@ -12,7 +12,7 @@ def setup_logging(verbose: bool = False):
     # Set the root logger level
     root_logger = logging.getLogger()
 
-    # Clear any existing handlers to avoid duplicate logs
+    # Clear existing handlers to avoid duplicate logs
     if root_logger.handlers:
         for handler in root_logger.handlers:
             root_logger.removeHandler(handler)
@@ -26,12 +26,9 @@ def setup_logging(verbose: bool = False):
     console_handler.setLevel(log_level)
 
     # Create formatter and add it to the handler
-    if verbose:
-        # More detailed format for verbose mode
-        log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    else:
-        # Simpler format for non-verbose mode
-        log_format = "%(levelname)s: %(message)s"
+    log_formats = {True: "%(asctime)s.%(msecs)03d [%(name)s] %(levelname)s: %(message)s", False: "%(levelname)s: %(message)s"}
+    # Select format based on verbosity with ISO-8601 date format
+    log_format = log_formats[verbose]
 
     formatter = logging.Formatter(log_format)
     console_handler.setFormatter(formatter)
