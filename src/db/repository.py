@@ -12,7 +12,7 @@ class LLMCallRepository:
     def save(model_name: str, model_provider: str, prompt: str, response: Optional[str] = None, agent_name: Optional[str] = None, duration_ms: Optional[float] = None, success: bool = True, error_message: Optional[str] = None) -> LLMCall:
         """Save an LLM call log to the database."""
         with session_scope() as session:
-            llm_call = LLMCall(model_name=model_name, model_provider=model_provider, prompt=str(prompt), response=str(response) if response else None, agent_name=agent_name, duration_ms=duration_ms, success=success, error_message=error_message)
+            llm_call = LLMCall(model_name, model_provider, agent_name, prompt, response if response else None, duration_ms if duration_ms else None, success, error_message)
             session.add(llm_call)
             session.flush()  # Flush to get the ID
             session.refresh(llm_call)
